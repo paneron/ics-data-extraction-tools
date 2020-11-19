@@ -48,7 +48,12 @@ const code: ItemClassConfiguration<CodeData> = {
         {itemData.description}
       </span>,
     detailView: ({ itemData, className }) => {
-      const { fieldcode, groupcode, subgroupcode, context, description, descriptionFull, relationships, notes } = itemData;
+      const {
+        fieldcode, groupcode, subgroupcode,
+        context,
+        description, descriptionFull,
+        relationships, notes,
+      } = itemData;
       return (
         <div className={className}>
           <PropertyDetailView title="Code">
