@@ -6,7 +6,7 @@ import { jsx } from '@emotion/core';
 Object.assign(console, log);
 
 import { RegistryView } from '@riboseinc/paneron-registry-kit/views';
-import { PropertyDetailView } from '@riboseinc/paneron-registry-kit/views/util';
+import { GenericRelatedItemView, PropertyDetailView } from '@riboseinc/paneron-registry-kit/views/util';
 import { ItemClassConfiguration } from '@riboseinc/paneron-registry-kit/types/views';
 import { ControlGroup, InputGroup, Tag } from '@blueprintjs/core';
 
@@ -20,7 +20,7 @@ interface CodeData {
   context?: string // JSON-LD URL
   description: string
   descriptionFull: string
-  relationships: { type: 'related', to: string /* UUID */, description?: string }
+  relationships: { type: 'related', to: string /* UUID */, description?: string }[]
   notes: string[]
 }
 
@@ -47,7 +47,7 @@ const code: ItemClassConfiguration<CodeData> = {
         &emsp;
         {itemData.description}
       </span>,
-    detailView: ({ itemData, className }) => {
+    detailView: ({ itemData, className, useRegisterItemData, getRelatedItemClassConfiguration }) => {
       const {
         fieldcode, groupcode, subgroupcode,
         context,
@@ -74,6 +74,18 @@ const code: ItemClassConfiguration<CodeData> = {
           <PropertyDetailView title="Full description">
             {descriptionFull || '—'}
           </PropertyDetailView>
+          <PropertyDetailView title="Relationships">
+            {relationships.map(r =>
+              <div>
+                <GenericRelatedItemView
+                  useRegisterItemData={useRegisterItemData}
+                  getRelatedItemClassConfiguration={getRelatedItemClassConfiguration}
+                  itemRef={{ classID: 'codes', itemID: r.to }}
+                />
+                {r.description ? <p>{r.description}</p> : null}
+              </div>
+            )}
+          </PropertyDetailView>
         </div>
       );
     },
@@ -83,5 +95,5 @@ const code: ItemClassConfiguration<CodeData> = {
 
 
 export default function () {
-  return <RegistryView itemClassConfiguration={{ code }} />
+  return <RegistryView itemClassConfiguration={{ codes: code }} />
 };
