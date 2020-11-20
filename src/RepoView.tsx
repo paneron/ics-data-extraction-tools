@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
 import log from 'electron-log';
-import { jsx } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 
 Object.assign(console, log);
 
@@ -20,8 +20,8 @@ interface CodeData {
   context?: string // JSON-LD URL
   description: string
   descriptionFull: string
-  relationships: { type: 'related', to: string /* UUID */, description?: string }[]
-  notes: string[]
+  relationships: { type: 'related', to: string /* UUID */, text?: string }[]
+  notes?: string[]
 }
 
 
@@ -82,7 +82,14 @@ const code: ItemClassConfiguration<CodeData> = {
                   getRelatedItemClassConfiguration={getRelatedItemClassConfiguration}
                   itemRef={{ classID: 'codes', itemID: r.to }}
                 />
-                {r.description ? <p>{r.description}</p> : null}
+                {r.text ? <p css={css`margin-top: .25rem;`}>{r.text}</p> : null}
+              </div>
+            )}
+          </PropertyDetailView>
+          <PropertyDetailView title="Notes">
+            {(notes || []).map(n =>
+              <div>
+                <p css={css`margin-top: .25rem;`}>{n}</p>
               </div>
             )}
           </PropertyDetailView>
